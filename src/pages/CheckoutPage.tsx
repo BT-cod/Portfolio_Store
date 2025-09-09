@@ -54,29 +54,11 @@ const CheckoutPage: React.FC = () => {
     return `₹${price.toLocaleString("en-IN")}`;
   };
 
-  const sendEmailNotifications = async (orderDetails: any) => {
+  const sendEmailNotifications = async () => {
     try {
-      // Email to buyer
       await emailjs.send(
         "service_3qnlsla", // Replace with your EmailJS service ID
-        "template_diyi8rc", // Replace with your buyer template ID
-        {
-          to_name: userDetails.name,
-          to_email: userDetails.email,
-          order_total: formatPrice(state.total),
-          templates: state.items
-            .map((item) => `${item.title} x${item.quantity}`)
-            .join(", "),
-          contact_email: "mtbalraj@gmail.com",
-          whatsapp: "+91 8618319154",
-        },
-        "BPaXFxTGB1pCQiLuV" // Replace with your EmailJS public key
-      );
-
-      // Email to seller
-      await emailjs.send(
-        "service_3qnlsla", // Replace with your EmailJS service ID
-        "template_diyi8rc", // Replace with your seller template ID
+        "template_diyi8rc", // Replace with your EmailJS template ID
         {
           buyer_name: userDetails.name,
           buyer_email: userDetails.email,
@@ -105,26 +87,42 @@ const CheckoutPage: React.FC = () => {
     setIsProcessing(true);
 
     try {
-      // Open Razorpay payment link
-      window.open("https://rzp.io/rzp/lyNamEi", "_blank");
+      // ✅ Redirect user to Razorpay.me live payment page
+      const amount = state.total; // amount in INR
+      const url = `https://razorpay.me/@webh?amount=${amount}&name=${encodeURIComponent(
+        userDetails.name
+      )}&email=${encodeURIComponent(
+        userDetails.email
+      )}&contact=${encodeURIComponent(userDetails.phone)}`;
 
-      // Simulate payment success (in a real app, you'd get payment confirmation from Razorpay)
-      setTimeout(async () => {
-        // Send email notifications
-        await sendEmailNotifications({
-          buyer: userDetails,
-          items: state.items,
-          total: state.total,
-        });
+      // Open in new tab for payment
+      const paymentWindow = window.open(url, "_blank");
 
-        // Clear cart
-        dispatch({ type: "CLEAR_CART" });
+      // ⚠ Since Razorpay.me doesn’t provide callbacks,
+      // we simulate success AFTER user closes payment tab
+      const checkPayment = setInterval(async () => {
+        if (paymentWindow && paymentWindow.closed) {
+          clearInterval(checkPayment);
 
-        alert(
-          "Payment successful! You will receive your templates via email within 5-10 minutes."
-        );
-        setIsProcessing(false);
-      }, 3000);
+          try {
+            // ✅ After payment tab closed → send email
+            await sendEmailNotifications();
+
+            // ✅ Clear cart
+            dispatch({ type: "CLEAR_CART" });
+
+            // ✅ Redirect to Google Form
+            window.location.href = "https://forms.gle/your-google-form-id"; // replace with actual form link
+          } catch (error) {
+            console.error("Post-payment actions failed:", error);
+            alert(
+              "Something went wrong after payment. Please contact support."
+            );
+          } finally {
+            setIsProcessing(false);
+          }
+        }
+      }, 1000);
     } catch (error) {
       console.error("Payment failed:", error);
       alert("Payment failed. Please try again.");
@@ -317,7 +315,7 @@ const CheckoutPage: React.FC = () => {
                 ) : (
                   <>
                     <CreditCard className="h-5 w-5 mr-2" />
-                    Pay with Razorpay
+                    Proceed to Checkout
                   </>
                 )}
               </button>
