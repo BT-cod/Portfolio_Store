@@ -54,84 +54,98 @@ const CheckoutPage: React.FC = () => {
     return `₹${price.toLocaleString("en-IN")}`;
   };
 
+  // 🚀 Send email notifications to both you + buyer
   const sendEmailNotifications = async () => {
     try {
+      // 1️⃣ Send order notification to YOU
       await emailjs.send(
-        "service_3qnlsla", // Replace with your EmailJS service ID
-        "template_diyi8rc", // Replace with your EmailJS template ID
+        "service_3qnlsla", // ✅ Service ID
+        "template_e85u1oh", // ✅ Your notification template
         {
-          buyer_name: userDetails.name,
-          buyer_email: userDetails.email,
-          buyer_phone: userDetails.phone,
+          name: userDetails.name,
+          email: userDetails.email,
+          phone: userDetails.phone,
           order_total: formatPrice(state.total),
           templates: state.items
             .map((item) => `${item.title} x${item.quantity}`)
             .join(", "),
-          customization_needed: userDetails.needCustomization ? "Yes" : "No",
-          customization_details: userDetails.customizationDetails,
-          to_email: "mtbalraj@gmail.com",
+          customization: userDetails.needCustomization ? "Yes" : "No",
+          customization_details: userDetails.customizationDetails || "N/A",
         },
-        "BPaXFxTGB1pCQiLuV" // Replace with your EmailJS public key
+        "BPaXFxTGB1pCQiLuV" // ✅ Your EmailJS public key
+      );
+
+      // 2️⃣ Send thank-you confirmation to BUYER
+      await emailjs.send(
+        "service_3qnlsla",
+        "template_pzntlh4", // ✅ Buyer template
+        {
+          name: userDetails.name,
+          portfolio_title: state.items
+            .map((item) => `${item.title}`)
+            .join(", "), // buyer can buy multiple templates
+          email: userDetails.email,
+        },
+        "BPaXFxTGB1pCQiLuV"
       );
     } catch (error) {
       console.error("Email sending failed:", error);
     }
   };
 
-const handlePayment = async () => {
-  if (!userDetails.name || !userDetails.email || !userDetails.phone) {
-    alert("Please fill in all required fields");
-    return;
-  }
+  const handlePayment = async () => {
+    if (!userDetails.name || !userDetails.email || !userDetails.phone) {
+      alert("Please fill in all required fields");
+      return;
+    }
 
-  setIsProcessing(true);
+    setIsProcessing(true);
 
-  try {
-    const options = {
-      key: "rzp_live_RFVWKse0q0Mgy2", // 🔑 Your Razorpay Key ID (not secret!)
-      amount: state.total * 100, // Razorpay takes amount in paise (₹1 = 100)
-      currency: "INR",
-      name: "Webh",
-      description: "Portfolio Template Purchase",
-      handler: async function (response: any) {
-        // 🚨 No verification here since no backend
-        // We assume payment was successful if Razorpay calls this
+    try {
+      const options = {
+        key: "rzp_live_RFVWKse0q0Mgy2", // 🔑 Razorpay Key ID
+        amount: state.total * 100, // paise
+        currency: "INR",
+        name: "Webh",
+        description: "Portfolio Template Purchase",
+        handler: async function (response: any) {
+          try {
+            // ✅ Send both emails
+            await sendEmailNotifications();
 
-        try {
-          // ✅ Send email notifications
-          await sendEmailNotifications();
+            // ✅ Clear cart
+            dispatch({ type: "CLEAR_CART" });
 
-          // ✅ Clear cart
-          dispatch({ type: "CLEAR_CART" });
+            // ✅ Redirect user to Google Form
+            window.location.href =
+              "https://docs.google.com/forms/d/e/1FAIpQLScX0RC3DwqFOM3VDMLQnZaAl-3HMtW3J6KipT0QGYY2QfLmWg/viewform?usp=sharing";
+          } catch (err) {
+            console.error("Post-payment error:", err);
+            alert(
+              "Something went wrong after payment. Please contact support."
+            );
+          } finally {
+            setIsProcessing(false);
+          }
+        },
+        prefill: {
+          name: userDetails.name,
+          email: userDetails.email,
+          contact: userDetails.phone,
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
 
-          // ✅ Redirect user to Google Form
-          window.location.href = "https://forms.gle/your-google-form-id"; // replace with your form
-        } catch (err) {
-          console.error("Post-payment error:", err);
-          alert("Something went wrong after payment. Please contact support.");
-        } finally {
-          setIsProcessing(false);
-        }
-      },
-      prefill: {
-        name: userDetails.name,
-        email: userDetails.email,
-        contact: userDetails.phone,
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
-
-    const rzp = new (window as any).Razorpay(options);
-    rzp.open();
-  } catch (err) {
-    console.error("Payment failed:", err);
-    alert("Payment failed. Please try again.");
-    setIsProcessing(false);
-  }
-};
-
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.error("Payment failed:", err);
+      alert("Payment failed. Please try again.");
+      setIsProcessing(false);
+    }
+  };
 
   if (state.items.length === 0) {
     return (

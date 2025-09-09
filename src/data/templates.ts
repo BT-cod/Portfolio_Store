@@ -6,7 +6,7 @@ export const templates: Template[] = [
     title: "Wave Spark Portfolio",
     description: "A clean and minimal portfolio with smooth animations, perfect for designers and developers.",
     image: "https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=600",
-    price: 499,
+    price: 1,
     previewLink: "https://wave-spark-portfolio-main.netlify.app",
     features: ["Responsive Design", "Smooth Animations", "Contact Form", "SEO Optimized"],
     category: "Minimal"
