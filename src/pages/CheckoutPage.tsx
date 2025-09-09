@@ -78,57 +78,60 @@ const CheckoutPage: React.FC = () => {
     }
   };
 
-  const handlePayment = async () => {
-    if (!userDetails.name || !userDetails.email || !userDetails.phone) {
-      alert("Please fill in all required fields");
-      return;
-    }
+const handlePayment = async () => {
+  if (!userDetails.name || !userDetails.email || !userDetails.phone) {
+    alert("Please fill in all required fields");
+    return;
+  }
 
-    setIsProcessing(true);
+  setIsProcessing(true);
 
-    try {
-      // ✅ Redirect user to Razorpay.me live payment page
-      const amount = state.total; // amount in INR
-      const url = `https://razorpay.me/@webh?amount=${amount}&name=${encodeURIComponent(
-        userDetails.name
-      )}&email=${encodeURIComponent(
-        userDetails.email
-      )}&contact=${encodeURIComponent(userDetails.phone)}`;
+  try {
+    const options = {
+      key: "rzp_live_RFVWKse0q0Mgy2", // 🔑 Your Razorpay Key ID (not secret!)
+      amount: state.total * 100, // Razorpay takes amount in paise (₹1 = 100)
+      currency: "INR",
+      name: "Webh",
+      description: "Portfolio Template Purchase",
+      handler: async function (response: any) {
+        // 🚨 No verification here since no backend
+        // We assume payment was successful if Razorpay calls this
 
-      // Open in new tab for payment
-      const paymentWindow = window.open(url, "_blank");
+        try {
+          // ✅ Send email notifications
+          await sendEmailNotifications();
 
-      // ⚠ Since Razorpay.me doesn’t provide callbacks,
-      // we simulate success AFTER user closes payment tab
-      const checkPayment = setInterval(async () => {
-        if (paymentWindow && paymentWindow.closed) {
-          clearInterval(checkPayment);
+          // ✅ Clear cart
+          dispatch({ type: "CLEAR_CART" });
 
-          try {
-            // ✅ After payment tab closed → send email
-            await sendEmailNotifications();
-
-            // ✅ Clear cart
-            dispatch({ type: "CLEAR_CART" });
-
-            // ✅ Redirect to Google Form
-            window.location.href = "https://forms.gle/your-google-form-id"; // replace with actual form link
-          } catch (error) {
-            console.error("Post-payment actions failed:", error);
-            alert(
-              "Something went wrong after payment. Please contact support."
-            );
-          } finally {
-            setIsProcessing(false);
-          }
+          // ✅ Redirect user to Google Form
+          window.location.href = "https://forms.gle/your-google-form-id"; // replace with your form
+        } catch (err) {
+          console.error("Post-payment error:", err);
+          alert("Something went wrong after payment. Please contact support.");
+        } finally {
+          setIsProcessing(false);
         }
-      }, 1000);
-    } catch (error) {
-      console.error("Payment failed:", error);
-      alert("Payment failed. Please try again.");
-      setIsProcessing(false);
-    }
-  };
+      },
+      prefill: {
+        name: userDetails.name,
+        email: userDetails.email,
+        contact: userDetails.phone,
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const rzp = new (window as any).Razorpay(options);
+    rzp.open();
+  } catch (err) {
+    console.error("Payment failed:", err);
+    alert("Payment failed. Please try again.");
+    setIsProcessing(false);
+  }
+};
+
 
   if (state.items.length === 0) {
     return (
