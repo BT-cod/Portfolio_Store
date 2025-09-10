@@ -142,7 +142,7 @@ const PortfolioShowcase: React.FC = () => {
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="text-xl font-semibold text-gray-900">{template.title}</h3>
-                      <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                      <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full text-center">
                         {template.category}
                       </span>
                     </div>
