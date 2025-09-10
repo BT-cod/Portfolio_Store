@@ -62,6 +62,24 @@ const LandingPage: React.FC = () => {
 
   const features = [
     {
+      title: "Fresher Friendly",
+      description:
+        "All templates are specially designed for fresh graduates and job seekers, making your profile stand out.",
+      icon: "🎓",
+    },
+    {
+      title: "GitHub & Deployment",
+      description:
+        "I will deploy your portfolio and provide a link. If you want, I’ll guide you to set it up on GitHub in just 3 simple steps.",
+      icon: "🌐",
+    },
+    {
+      title: "Boost Your Career",
+      description:
+        "Add your portfolio link to resumes, LinkedIn, Naukri, Internshala, and job applications to increase visibility.",
+      icon: "📌",
+    },
+    {
       title: "Professional Design",
       description:
         "Every template is crafted with attention to detail, looks standard, and follows modern design principles.",
@@ -84,24 +102,6 @@ const LandingPage: React.FC = () => {
       description:
         "Optimized for performance with fast loading times for a smooth browsing experience.",
       icon: "🚀",
-    },
-    {
-      title: "Fresher Friendly",
-      description:
-        "All templates are specially designed for fresh graduates and job seekers, making your profile stand out.",
-      icon: "🎓",
-    },
-    {
-      title: "GitHub & Deployment",
-      description:
-        "I will deploy your portfolio and provide a link. If you want, I’ll guide you to set it up on GitHub in just 3 simple steps.",
-      icon: "🌐",
-    },
-    {
-      title: "Boost Your Career",
-      description:
-        "Add your portfolio link to resumes, LinkedIn, Naukri, Internshala, and job applications to increase visibility.",
-      icon: "📌",
     },
     {
       title: "Full Support",
