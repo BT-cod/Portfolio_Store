@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Briefcase } from 'lucide-react';
-import { useCart } from '../context/CartContext';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { ShoppingCart, Menu, X, Briefcase } from "lucide-react";
+import { useCart } from "../context/CartContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,21 +14,21 @@ const Navigation: React.FC = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navLinks = [
-    { path: '/', name: 'Home' },
-    { path: '/templates', name: 'Templates' },
+    { path: "/", name: "Home" },
+    { path: "/templates", name: "Templates" },
   ];
 
   return (
-    <motion.nav 
+    <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className={`fixed w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
+        scrolled ? "bg-white/95 backdrop-blur-md shadow-lg" : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -51,14 +51,16 @@ const Navigation: React.FC = () => {
                 to={link.path}
                 className={`font-medium transition-colors duration-200 ${
                   location.pathname === link.path
-                    ? 'text-blue-600'
-                    : scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-gray-800 hover:text-blue-600'
+                    ? "text-blue-600"
+                    : scrolled
+                    ? "text-gray-700 hover:text-blue-600"
+                    : "text-gray-800 hover:text-blue-600"
                 }`}
               >
                 {link.name}
               </Link>
             ))}
-            
+
             <Link
               to="/cart"
               className="relative inline-flex items-center justify-center p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200"
@@ -85,12 +87,16 @@ const Navigation: React.FC = () => {
                 </span>
               )}
             </Link>
-            
+
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
             >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </button>
           </div>
         </div>
@@ -101,7 +107,7 @@ const Navigation: React.FC = () => {
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden bg-white border-t"
           >
@@ -113,8 +119,8 @@ const Navigation: React.FC = () => {
                   onClick={() => setIsOpen(false)}
                   className={`block px-3 py-2 text-base font-medium transition-colors duration-200 ${
                     location.pathname === link.path
-                      ? 'text-blue-600 bg-blue-50'
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                      ? "text-blue-600 bg-blue-50"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
                   }`}
                 >
                   {link.name}
