@@ -54,8 +54,8 @@ const LandingPage: React.FC = () => {
   }, []);
 
   const stats = [
-    { icon: Users, value: "1000+", label: "Happy Customers" },
-    { icon: Download, value: "500+", label: "Templates Sold" },
+    { icon: Users, value: "100+", label: "Happy Customers" },
+    { icon: Download, value: "50+", label: "Templates Sold" },
     { icon: Star, value: "4.9", label: "Average Rating" },
     { icon: Zap, value: "24/7", label: "Support" },
   ];
@@ -64,26 +64,50 @@ const LandingPage: React.FC = () => {
     {
       title: "Professional Design",
       description:
-        "Every template is crafted with attention to detail and modern design principles.",
+        "Every template is crafted with attention to detail, looks standard, and follows modern design principles.",
       icon: "🎨",
     },
     {
       title: "Mobile Responsive",
       description:
-        "All templates are fully responsive and look great on any device.",
+        "All templates are fully responsive and look great on any device—mobile, tablet, or desktop.",
       icon: "📱",
     },
     {
       title: "Easy Customization",
       description:
-        "Simple to customize with clean code and detailed documentation.",
+        "Fully customizable with clean code, no copyrights issues, and simple setup for your needs.",
       icon: "⚡",
     },
     {
       title: "Fast Loading",
       description:
-        "Optimized for speed with fast loading times and great performance.",
+        "Optimized for performance with fast loading times for a smooth browsing experience.",
       icon: "🚀",
+    },
+    {
+      title: "Fresher Friendly",
+      description:
+        "All templates are specially designed for fresh graduates and job seekers, making your profile stand out.",
+      icon: "🎓",
+    },
+    {
+      title: "GitHub & Deployment",
+      description:
+        "I will deploy your portfolio and provide a link. If you want, I’ll guide you to set it up on GitHub in just 3 simple steps.",
+      icon: "🌐",
+    },
+    {
+      title: "Boost Your Career",
+      description:
+        "Add your portfolio link to resumes, LinkedIn, Naukri, Internshala, and job applications to increase visibility.",
+      icon: "📌",
+    },
+    {
+      title: "Full Support",
+      description:
+        "Not just sold—I’ll provide full support and assistance to make sure your portfolio works perfectly.",
+      icon: "🤝",
     },
   ];
 
@@ -134,7 +158,7 @@ const LandingPage: React.FC = () => {
             </Link>
 
             <div className="text-sm text-gray-500">
-              ⭐ Over 1000+ satisfied customers
+              ⭐ Over 100+ satisfied customers
             </div>
           </div>
         </div>
