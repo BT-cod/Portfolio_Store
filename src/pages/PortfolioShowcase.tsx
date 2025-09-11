@@ -129,7 +129,7 @@ const PortfolioShowcase: React.FC = () => {
                       <a
                         href={template.previewLink}
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel="noopener noreferrer nofollow"
                         className="inline-flex items-center px-4 py-2 bg-white text-gray-900 rounded-lg font-medium hover:bg-gray-100 transition-colors"
                       >
                         <ExternalLink className="h-4 w-4 mr-2" />

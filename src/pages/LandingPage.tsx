@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ArrowRight, Star, Users, Download, Zap } from "lucide-react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const LandingPage: React.FC = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -40,16 +42,21 @@ const LandingPage: React.FC = () => {
       );
 
     // Stats animation
-    gsap.from(".stat-item", {
-      duration: 0.8,
-      y: 50,
-      opacity: 0,
-      stagger: 0.2,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: statsRef.current,
-        start: "top 80%",
-      },
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.utils.toArray(".stat-item").forEach((item: any, i) => {
+      gsap.from(item, {
+        duration: 0.8,
+        y: 50,
+        opacity: 0,
+        delay: i * 0.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: statsRef.current,
+          start: "top 80%",
+        },
+      });
     });
   }, []);
 
