@@ -43,7 +43,7 @@ const LandingPage: React.FC = () => {
     gsap.from(".stat-item", {
       duration: 0.8,
       y: 50,
-      opacity: 1,
+      opacity: 0,
       stagger: 0.2,
       ease: "power3.out",
       scrollTrigger: {
